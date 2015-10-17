@@ -1,6 +1,6 @@
-function [ t,P ] = solveSVIR(beta,gamma,e,p,mu,N,S0,tmax )
+function [ t,P ] = solveSVIR(beta,gamma,e,p,mu,N,R0,S0,tmax )
 
-sol=ode45(@SIRmodel,[0 tmax],[S0,0,1,N-S0-1]);
+sol=ode45(@SIRmodel,[0 tmax],[S0,R0,1,N-S0-1]);
 
 t=linspace(0,tmax); %100 equally spaced points
 P=deval(sol,t);
