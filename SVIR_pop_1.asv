@@ -1,0 +1,11 @@
+% George Zeng
+% AM 115
+% Group Project
+% Running SolveSVIR
+
+N = 10^5;
+
+
+[beta,gamma,N,mu,e,p,S0,tmax] = ...
+    deal(0.0029,26,10^5,0.02,1,0.91,,1000);
+[t,P] = solveSVIR(beta,gamma,N,mu,e,p,S0,tmax);

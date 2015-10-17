@@ -1,0 +1,31 @@
+function [ t,P ] = solveSVIR(beta,gamma,N,mu,e,p,S0,tmax )
+
+sol=ode45(@SVIRmodel,[0 tmax],[S0,0,1,N-S0-1]);
+
+t=linspace(0,tmax); %100 equally spaced points
+P=deval(sol,t);
+
+plot(t,P)
+
+%ALWAYS label your axes
+xlabel('time')
+ylabel('numbers of individuals')
+%a title wouldn't hurt either
+title('S, V, I and R vs time (t)')
+
+%and a legend allows us to tell the curves apart
+legend('S','V','I','R')
+
+    function dP=SVIRmodel(t,P)
+        dP=zeros(4,1);
+        unvac_births = (1-e*p)*mu*N;
+        inf = beta*P(1)*P(3);
+        
+        dP(1)= (1-e*p)*mu*N -beta*P(1)*P(3) - mu*dP(1);
+        dP(2)= e*p*mu*N - mu*P(2);
+        dP(3)= beta*P(1)*P(3) - gamma*P(3) - mu*P(3);
+        dP(4)= gamma*P(3) - mu*dP(4);
+    end   %ends our derivatives function
+end   %ends our main solver function
+
+%  [t,P]=solveSIR(2*0.693,0.693,1000,999,30);
