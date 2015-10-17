@@ -26,6 +26,7 @@ legend('S','V','I','R')
         dP(2)= e*p*mu*N - mu*dP(2); % added V
         dP(3)= beta*P(1)*P(3) - gamma*P(3) - mu*P(3); %I
         dP(4)= gamma*P(3) - mu*P(4); %R
+        
     end   %ends our derivatives function
 end   %ends our main solver function
 

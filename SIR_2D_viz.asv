@@ -1,0 +1,70 @@
+% George Zeng
+% AM 115 
+% Group Project 1
+% 2D dynamics of disease
+
+clc; clear all;
+
+% Disease parameters
+pI = 0.1;
+pR = 0.2;
+nsteps = 100;
+% Population parameters
+WP = 100;
+NI = 500;
+
+% Initial infected
+P = ones(WP, WP);
+I_ndx = randperm(WP.^2,NI);
+P(I_ndx) = 2;
+
+% Gaussian kernel
+sigma = 1;
+NW = 1*sigma;
+[Nx, Ny] = meshgrid(-NW:NW, -NW:NW);
+G = 1./(sigma.*sqrt(2.*pi)).*exp(-(Nx.^2 + Ny.^2)./(2.*sigma^2));
+%G(NW/2,NW/2) = 0;
+
+S = double(P == 1);
+I = double(P == 2);
+R = double(P == 3);
+
+S_im = figure(1);
+I_im = figure(2);
+R_im = figure(3);
+pI_im = figure(4);
+
+stats = [sum(sum(S)), sum(sum(I)), sum(sum(R))];
+
+for i=1:nsteps
+    i
+    curr_stats = [sum(sum(S)), sum(sum(I)), sum(sum(R))];
+    stats = [stats; curr_stats];
+    
+    % subpopulation indicator matrices
+    S = double(P == 1);
+    I = double(P == 2);
+    R = double(P == 3);
+
+    % stochastic component
+    state = rand(WP,WP,1);
+    pI_pop = pI.*conv2(I,G,'same');
+    %figure(pI_im); imshow(pI_pop); title('Probability of infection');
+    
+    S2 = S.*(state > pI);
+    %figure(10); imshow(S.*(state <= pI_pop));
+    %figure(11); imshow(I.*(state > pR));
+    I2 = S.*(state <= pI) + I.*(state > pR);
+    R2 = I.*(state <= pR) + R; 
+    
+    %figure(S_im); imshow(S2); title('S');
+    %figure(I_im); imshow(I2); title('I');
+    %figure(R_im); imshow(R2); title('R');
+    
+    % new matrix
+    P = S2 + 2*I2 + 3*R2;
+    
+end
+
+plot(stats);
+legend('S','I','R');
